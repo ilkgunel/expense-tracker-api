@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,5 +32,8 @@ public class Account {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "account_roles", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "account")
+    private List<Expense> expenses;
 
 }

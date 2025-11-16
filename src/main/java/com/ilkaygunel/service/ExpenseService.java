@@ -24,20 +24,20 @@ public class ExpenseService {
 
         Expense expense = ExpenseMapper.INSTANCE.dtoToEntity(expenseCreationInputDto);
 
-        expense.setAccountId(getCurrentLoggedInAccountId());
+        expense.setAccount(getCurrentLoggedInAccount());
 
         Expense savedExpense = expenseRepository.save(expense);
 
         return ExpenseMapper.INSTANCE.entityToDto(savedExpense);
     }
 
-    private Long getCurrentLoggedInAccountId() {
+    private Account getCurrentLoggedInAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         String emailOfLoggedInUser = user.getUsername();
 
         return accountRepository.findByEmail(emailOfLoggedInUser)
-                .map(Account::getId)
+                //.map(Account::getId)
                 .orElseThrow(() -> new RuntimeException("There is no account with the address: " + emailOfLoggedInUser));
     }
 }
