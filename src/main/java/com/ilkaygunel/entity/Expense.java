@@ -25,4 +25,7 @@ public class Expense {
 
     @Column(name = "EXPENSE_DATE")
     private LocalDate expenseDate;
+
+    @Column(name = "ACCOUNT_ID")
+    private Long accountId;
 }

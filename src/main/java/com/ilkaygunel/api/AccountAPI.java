@@ -21,7 +21,7 @@ public class AccountAPI {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountOutputDTO> createUser(@RequestBody AccountInputDTO accountInputDTO) {
-        AccountOutputDTO accountOutputDTO = accountService.saveUser(accountInputDTO);
+        AccountOutputDTO accountOutputDTO = accountService.saveAccount(accountInputDTO);
         return new ResponseEntity<>(accountOutputDTO, HttpStatus.CREATED);
     }
 
