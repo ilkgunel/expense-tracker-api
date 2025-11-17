@@ -26,7 +26,7 @@ public class Expense {
     @Column(name = "EXPENSE_DATE")
     private LocalDate expenseDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ACCOUNT_ID", nullable = false)
     private Account account;
 }

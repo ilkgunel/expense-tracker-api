@@ -1,5 +1,6 @@
 package com.ilkaygunel.service;
 
+import com.ilkaygunel.dto.AccountExpensesOutputDto;
 import com.ilkaygunel.dto.ExpenseCreationInputDto;
 import com.ilkaygunel.dto.ExpenseCreationOutputDto;
 import com.ilkaygunel.entity.Account;
@@ -12,6 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,13 +35,33 @@ public class ExpenseService {
         return ExpenseMapper.INSTANCE.entityToDto(savedExpense);
     }
 
+    public List<AccountExpensesOutputDto> getExpensesOfCurrentUser() {
+
+        List<Expense> expenseList = expenseRepository.findByAccountEmail(getCurrentLoggedInAccountEmail());
+
+        return expenseList.stream().map(expense -> {
+            AccountExpensesOutputDto accountExpensesOutputDto = new AccountExpensesOutputDto();
+            accountExpensesOutputDto.setExpenseCategory(expense.getCategory());
+            accountExpensesOutputDto.setExpenseAmount(expense.getAmount());
+            accountExpensesOutputDto.setExpenseAccountMail(expense.getAccount().getEmail());
+            accountExpensesOutputDto.setExpenseDate(expense.getExpenseDate());
+
+            return accountExpensesOutputDto;
+        }).collect(Collectors.toList());
+    }
+
     private Account getCurrentLoggedInAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         String emailOfLoggedInUser = user.getUsername();
 
-        return accountRepository.findByEmail(emailOfLoggedInUser)
-                //.map(Account::getId)
+        return accountRepository.findByEmail(getCurrentLoggedInAccountEmail())
                 .orElseThrow(() -> new RuntimeException("There is no account with the address: " + emailOfLoggedInUser));
+    }
+
+    private String getCurrentLoggedInAccountEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return user.getUsername();
     }
 }
