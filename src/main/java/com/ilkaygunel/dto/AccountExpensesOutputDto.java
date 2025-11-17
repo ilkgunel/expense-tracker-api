@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class AccountExpensesOutputDto {
-    private String expenseCategory;
-    private BigDecimal expenseAmount;
+    private String category;
+    private BigDecimal amount;
     private LocalDate expenseDate;
     private String expenseAccountMail;
 }

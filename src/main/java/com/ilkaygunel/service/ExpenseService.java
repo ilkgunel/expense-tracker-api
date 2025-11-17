@@ -39,15 +39,7 @@ public class ExpenseService {
 
         List<Expense> expenseList = expenseRepository.findByAccountEmail(getCurrentLoggedInAccountEmail());
 
-        return expenseList.stream().map(expense -> {
-            AccountExpensesOutputDto accountExpensesOutputDto = new AccountExpensesOutputDto();
-            accountExpensesOutputDto.setExpenseCategory(expense.getCategory());
-            accountExpensesOutputDto.setExpenseAmount(expense.getAmount());
-            accountExpensesOutputDto.setExpenseAccountMail(expense.getAccount().getEmail());
-            accountExpensesOutputDto.setExpenseDate(expense.getExpenseDate());
-
-            return accountExpensesOutputDto;
-        }).collect(Collectors.toList());
+        return expenseList.stream().map(ExpenseMapper.INSTANCE::expenseEntityToAccountExpensesOutputDto).collect(Collectors.toList());
     }
 
     private Account getCurrentLoggedInAccount() {
