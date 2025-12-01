@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class ExpenseCreationOutputDto {
 
     private Long expenseId;
-    private String category;
+    private String categoryCode;
     private BigDecimal amount;
     private LocalDate expenseDate;
 

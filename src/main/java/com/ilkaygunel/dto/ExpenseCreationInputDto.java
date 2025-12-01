@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Setter
 public class ExpenseCreationInputDto {
 
-    private String category;
+    private String categoryCode;
     private BigDecimal amount;
     private LocalDate expenseDate;
 

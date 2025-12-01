@@ -23,12 +23,14 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final AccountRepository accountRepository;
+    private final CategoryService categoryService;
 
     public ExpenseCreationOutputDto saveExpense(ExpenseCreationInputDto expenseCreationInputDto) {
 
         Expense expense = ExpenseMapper.INSTANCE.dtoToEntity(expenseCreationInputDto);
 
         expense.setAccount(getCurrentLoggedInAccount());
+        expense.setCategory(categoryService.findCategoryByCategoryCode(expenseCreationInputDto.getCategoryCode()));
 
         Expense savedExpense = expenseRepository.save(expense);
 

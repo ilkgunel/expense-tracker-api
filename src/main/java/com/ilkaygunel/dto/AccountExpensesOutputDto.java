@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class AccountExpensesOutputDto {
-    private String category;
+    private String categoryCode;
     private BigDecimal amount;
     private LocalDate expenseDate;
     private String expenseAccountMail;

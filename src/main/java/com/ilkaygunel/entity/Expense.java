@@ -17,8 +17,9 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "CATEGORY")
-    private String category;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CATEGORY_ID", nullable = false)
+    private Category category;
 
     @Column(name = "AMOUNT")
     private BigDecimal amount;
