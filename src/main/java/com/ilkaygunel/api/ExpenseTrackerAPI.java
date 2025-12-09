@@ -9,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/expense")
@@ -27,8 +26,15 @@ public class ExpenseTrackerAPI {
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ExpenseCreationOutputDto> createExpense(@RequestBody ExpenseCreationInputDto expenseCreationInputDto) {
         ExpenseCreationOutputDto expenseCreationOutputDto = expenseService.saveExpense(expenseCreationInputDto);
-
         return new ResponseEntity<>(expenseCreationOutputDto, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Expense Deletion", description = "Deletes an existing expense with the id")
+    @SuppressWarnings("unused")
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable Long id, Principal principal) {
+        expenseService.deleteExpense(principal.getName(), id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

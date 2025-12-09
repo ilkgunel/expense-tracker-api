@@ -27,6 +27,9 @@ public class Expense {
     @Column(name = "EXPENSE_DATE")
     private LocalDate expenseDate;
 
+    @Column(name = "LOCATION")
+    private String location;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ACCOUNT_ID", nullable = false)
     private Account account;

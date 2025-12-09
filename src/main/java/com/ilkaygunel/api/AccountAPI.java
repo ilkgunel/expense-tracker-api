@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -35,8 +36,9 @@ public class AccountAPI {
     @Operation(summary = "Listing expenses", description = "Listing the current logged user expenses.")
     @SuppressWarnings("unused")
     @GetMapping(value = "/expenses", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AccountExpensesOutputDto>> accountExpenses() {
-        return new ResponseEntity<>(expenseService.getExpensesOfCurrentUser(), HttpStatus.OK);
+    public ResponseEntity<List<AccountExpensesOutputDto>> accountExpenses(Principal principal) {
+        String userEmail = principal.getName();
+        return new ResponseEntity<>(expenseService.getExpensesOfCurrentUser(userEmail), HttpStatus.OK);
     }
 
 }

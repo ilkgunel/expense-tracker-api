@@ -9,12 +9,15 @@ import com.ilkaygunel.mapper.ExpenseMapper;
 import com.ilkaygunel.repository.AccountRepository;
 import com.ilkaygunel.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,11 +40,30 @@ public class ExpenseService {
         return ExpenseMapper.INSTANCE.entityToDto(savedExpense);
     }
 
-    public List<AccountExpensesOutputDto> getExpensesOfCurrentUser() {
+    @Cacheable(value = "singleAccountExpense", key = "#currentLoggedInAccountEmail + '_' + #expenseId")
+    public AccountExpensesOutputDto getSingleExpense(String currentLoggedInAccountEmail, Long expenseId) {
+        System.out.println("Going to the Database for single expense with email --> " + currentLoggedInAccountEmail);
 
-        List<Expense> expenseList = expenseRepository.findByAccountEmail(getCurrentLoggedInAccountEmail());
+        Optional<Expense> expense = expenseRepository.findByAccountEmailAndId(currentLoggedInAccountEmail, expenseId);
+
+        return expense
+                .map(ExpenseMapper.INSTANCE::expenseEntityToAccountExpensesOutputDto)
+                .orElseThrow(() -> new RuntimeException("There is no expense with id and email!"));
+    }
+
+    @Cacheable(value = "accountExpenses", key = "#currentLoggedInAccountEmail")
+    public List<AccountExpensesOutputDto> getExpensesOfCurrentUser(String currentLoggedInAccountEmail) {
+
+        System.out.println("Going to the Database for: " + currentLoggedInAccountEmail);
+
+        List<Expense> expenseList = expenseRepository.findByAccountEmail(currentLoggedInAccountEmail);
 
         return expenseList.stream().map(ExpenseMapper.INSTANCE::expenseEntityToAccountExpensesOutputDto).collect(Collectors.toList());
+    }
+
+    @CacheEvict(value = "accountExpenses", key = "#currentLoggedInAccountEmail")
+    public void deleteExpense(String currentLoggedInAccountEmail, Long expenseId) {
+        expenseRepository.deleteById(expenseId);
     }
 
     private Account getCurrentLoggedInAccount() {

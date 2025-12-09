@@ -13,9 +13,12 @@ public interface ExpenseMapper {
 
     ExpenseMapper INSTANCE = Mappers.getMapper(ExpenseMapper.class);
 
+    @Mapping(target = "location", source = "expenseLocation")
     Expense dtoToEntity(ExpenseCreationInputDto expenseCreationInputDto);
 
     @Mapping(target = "categoryCode", source = "category.code")
+    @Mapping(target = "expenseId", source = "id")
+    @Mapping(target = "expenseLocation", source = "location")
     ExpenseCreationOutputDto entityToDto(Expense expense);
 
     @Mapping(target = "expenseAccountMail", source = "account.email" )

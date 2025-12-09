@@ -13,5 +13,6 @@ public class ExpenseCreationInputDto {
     private String categoryCode;
     private BigDecimal amount;
     private LocalDate expenseDate;
+    private String expenseLocation;
 
 }

@@ -14,5 +14,6 @@ public class ExpenseCreationOutputDto {
     private String categoryCode;
     private BigDecimal amount;
     private LocalDate expenseDate;
+    private String expenseLocation;
 
 }
