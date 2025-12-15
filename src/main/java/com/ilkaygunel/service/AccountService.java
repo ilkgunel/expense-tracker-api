@@ -16,8 +16,8 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
     public AccountOutputDTO saveAccount(AccountInputDTO accountInputDTO) {
-        Account entity = accountMapper.toUserEntity(accountInputDTO);
+        Account entity = accountMapper.dtoToEntity(accountInputDTO);
         Account savedEntity = accountRepository.save(entity);
-        return accountMapper.toUserRegisterOutputDTO(savedEntity);
+        return accountMapper.entityToDto(savedEntity);
     }
 }
