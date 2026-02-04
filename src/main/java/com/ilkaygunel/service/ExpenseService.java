@@ -1,8 +1,7 @@
 package com.ilkaygunel.service;
 
-import com.ilkaygunel.dto.AccountExpensesOutputDto;
+import com.ilkaygunel.dto.ExpenseOutputDto;
 import com.ilkaygunel.dto.ExpenseCreationInputDto;
-import com.ilkaygunel.dto.ExpenseCreationOutputDto;
 import com.ilkaygunel.entity.Account;
 import com.ilkaygunel.entity.Expense;
 import com.ilkaygunel.mapper.ExpenseMapper;
@@ -28,7 +27,9 @@ public class ExpenseService {
     private final AccountRepository accountRepository;
     private final CategoryService categoryService;
 
-    public ExpenseCreationOutputDto saveExpense(ExpenseCreationInputDto expenseCreationInputDto) {
+    //@CachePut(value = "accountExpenses", key = "#result.expenseAccountMail")
+    @CacheEvict(value = "accountExpenses", key = "#result.expenseAccountMail")
+    public ExpenseOutputDto saveExpense(ExpenseCreationInputDto expenseCreationInputDto) {
 
         Expense expense = ExpenseMapper.INSTANCE.dtoToEntity(expenseCreationInputDto);
 
@@ -41,24 +42,24 @@ public class ExpenseService {
     }
 
     @Cacheable(value = "singleAccountExpense", key = "#currentLoggedInAccountEmail + '_' + #expenseId")
-    public AccountExpensesOutputDto getSingleExpense(String currentLoggedInAccountEmail, Long expenseId) {
+    public ExpenseOutputDto getSingleExpense(String currentLoggedInAccountEmail, Long expenseId) {
         System.out.println("Going to the Database for single expense with email --> " + currentLoggedInAccountEmail);
 
         Optional<Expense> expense = expenseRepository.findByAccountEmailAndId(currentLoggedInAccountEmail, expenseId);
 
         return expense
-                .map(ExpenseMapper.INSTANCE::expenseEntityToAccountExpensesOutputDto)
+                .map(ExpenseMapper.INSTANCE::entityToDto)
                 .orElseThrow(() -> new RuntimeException("There is no expense with id and email!"));
     }
 
     @Cacheable(value = "accountExpenses", key = "#currentLoggedInAccountEmail")
-    public List<AccountExpensesOutputDto> getExpensesOfCurrentUser(String currentLoggedInAccountEmail) {
+    public List<ExpenseOutputDto> getExpensesOfCurrentUser(String currentLoggedInAccountEmail) {
 
         System.out.println("Going to the Database for: " + currentLoggedInAccountEmail);
 
         List<Expense> expenseList = expenseRepository.findByAccountEmail(currentLoggedInAccountEmail);
 
-        return expenseList.stream().map(ExpenseMapper.INSTANCE::expenseEntityToAccountExpensesOutputDto).collect(Collectors.toList());
+        return expenseList.stream().map(ExpenseMapper.INSTANCE::entityToDto).collect(Collectors.toList());
     }
 
     @CacheEvict(value = "accountExpenses", key = "#currentLoggedInAccountEmail")

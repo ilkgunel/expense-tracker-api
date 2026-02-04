@@ -1,7 +1,7 @@
 package com.ilkaygunel.api;
 
 import com.ilkaygunel.dto.ExpenseCreationInputDto;
-import com.ilkaygunel.dto.ExpenseCreationOutputDto;
+import com.ilkaygunel.dto.ExpenseOutputDto;
 import com.ilkaygunel.service.ExpenseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,9 +24,9 @@ public class ExpenseTrackerAPI {
     @Operation(summary = "Expense Creation", description = "Saves a new expense with category, amount and date.")
     @SuppressWarnings("unused")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ExpenseCreationOutputDto> createExpense(@RequestBody ExpenseCreationInputDto expenseCreationInputDto) {
-        ExpenseCreationOutputDto expenseCreationOutputDto = expenseService.saveExpense(expenseCreationInputDto);
-        return new ResponseEntity<>(expenseCreationOutputDto, HttpStatus.CREATED);
+    public ResponseEntity<ExpenseOutputDto> createExpense(@RequestBody ExpenseCreationInputDto expenseCreationInputDto) {
+        ExpenseOutputDto expenseOutputDto = expenseService.saveExpense(expenseCreationInputDto);
+        return new ResponseEntity<>(expenseOutputDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Expense Deletion", description = "Deletes an existing expense with the id")

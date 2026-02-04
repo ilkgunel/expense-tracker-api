@@ -1,6 +1,6 @@
 package com.ilkaygunel.api;
 
-import com.ilkaygunel.dto.AccountExpensesOutputDto;
+import com.ilkaygunel.dto.ExpenseOutputDto;
 import com.ilkaygunel.dto.AccountInputDTO;
 import com.ilkaygunel.dto.AccountOutputDTO;
 import com.ilkaygunel.service.AccountService;
@@ -36,7 +36,7 @@ public class AccountAPI {
     @Operation(summary = "Listing expenses", description = "Listing the current logged user expenses.")
     @SuppressWarnings("unused")
     @GetMapping(value = "/expenses", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AccountExpensesOutputDto>> accountExpenses(Principal principal) {
+    public ResponseEntity<List<ExpenseOutputDto>> accountExpenses(Principal principal) {
         String userEmail = principal.getName();
         return new ResponseEntity<>(expenseService.getExpensesOfCurrentUser(userEmail), HttpStatus.OK);
     }

@@ -1,9 +1,12 @@
 package com.ilkaygunel.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthRequestDTO {
-    private final String userName;
-    private final String password;
+    private String userName;
+    private String password;
 }
