@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        body { font-family: sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background-color: #4f46e5; color: white; padding: 10px; }
+        td { border-bottom: 1px solid #ddd; padding: 8px; }
+    </style>
+</head>
+<body>
+<h2>Expense Report</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Location</th>
+        <th>Category</th>
+        <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="expense : ${expenses}">
+        <td th:text="${expense.location}"></td>
+        <td th:text="${expense.categoryCode}"></td>
+        <td th:text="${'$' + expense.amount}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
